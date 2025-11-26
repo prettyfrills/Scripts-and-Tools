@@ -5,13 +5,16 @@ noComps = list()
 withComps = list()
 buildingMeshes = list()
 
-metadataKey = "osm_id"
-tagName = "Building"
+metadataKey = "osm_id"      ## Replace with desired datasmith metadata key. Ideally, this key is shared by all actors.
+tagName = "Building"        ## Tag to be added to assets. Helps with retrieving array of all assets in blueprints.
 
+'''
+These are the actor components which will be added to each actor.
+Replace by changing the path argument to your desired actor component blueprint.
+'''
 clickableComp = u.EditorAssetLibrary.load_blueprint_class("/Game/Blueprints/Components/AC_Interactable")
 dataComp = u.EditorAssetLibrary.load_blueprint_class("/Game/Blueprints/Components/AC_Metadata")
 damageComp = u.EditorAssetLibrary.load_blueprint_class("/Game/Blueprints/Components/AC_Damage")
-fluxComp = u.EditorAssetLibrary.load_blueprint_class("/Game/FluidFlux/Environment/Readback/BP_FluxDataComponent")
 
 def AddTag(actor):
     if(u.Name(tagName) not in actor.tags):
@@ -39,7 +42,7 @@ def FindOSMObjects():
     for mesh in buildingMeshes:
         AddTag(mesh)
 
-        if(mesh.get_component_by_class(clickableComp)):                 ## If clickable component is present.
+        if(mesh.get_component_by_class(clickableComp)):                 ## If clickable component is present. You may want to check for the presence of another component.
             withComps.append(mesh)
         else:
             noComps.append(mesh)
@@ -73,7 +76,6 @@ def AddComps():
                 clickSub = soSub.add_new_subobject(u.AddNewSubobjectParams(parent_handle=rootSub, new_class=clickableComp))
                 dataSub = soSub.add_new_subobject(u.AddNewSubobjectParams(parent_handle=rootSub, new_class=dataComp))
                 damSub = soSub.add_new_subobject(u.AddNewSubobjectParams(parent_handle=rootSub, new_class=damageComp))
-                soSub.add_new_subobject(u.AddNewSubobjectParams(parent_handle=rootSub, new_class=fluxComp))
 
                 withComps.append(mesh)
                 counter += 1
